@@ -1,4 +1,4 @@
-package rjson
+package rconfig
 
 import (
 	"encoding/json"
