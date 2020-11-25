@@ -103,7 +103,8 @@ results:
 key 333
 ```  
   
-**你还可以**
+**你还可以直接GetInt、GetString**  
+  
 code:  
 ```golang
 func main() {  
