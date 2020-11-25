@@ -31,7 +31,7 @@ func OpenConfig(path string) (*ConfigStruct, error) {
 	return &j, nil
 }
 
-func (c *ConfigStruct) Get(str string) interface{}{
+func (c *ConfigStruct) Get(str string) interface{} {
 	se := strings.Split(str, ".")
 	var s1 string
 	var s2 string
@@ -65,7 +65,7 @@ func (c *ConfigStruct) Get(str string) interface{}{
 	}
 	var newS2 string
 	if strings.Contains(s2, " ") {
-		newS2 = strings.Join(strings.Fields(s2),"")
+		newS2 = strings.Join(strings.Fields(s2), "")
 	}
 	if newS2 != "" {
 		re = regexp.MustCompile(`(.*?)=`)
