@@ -56,6 +56,9 @@ func (c *ConfigStruct) Get(str string) interface{} {
 	for _, v := range line {
 		if strings.Contains(v, se[1]) {
 			s2 = v
+			if strings.Contains(s2, "#") {
+				continue
+			}
 			break
 		}
 	}
