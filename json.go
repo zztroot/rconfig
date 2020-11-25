@@ -36,7 +36,7 @@ func OpenJson(path string) (*JsonStruct, error) {
 
 }
 
-func (j *JsonStruct) Get(str string) (interface{}, error){
+func (j *JsonStruct) Get(str string) interface{}{
 	defer func() {
 		if err := recover(); err != nil {
 			log.Fatalln("Field error:field does not exist")
@@ -52,7 +52,8 @@ func (j *JsonStruct) Get(str string) (interface{}, error){
 		}else if _, err := strconv.Atoi(v); err == nil{
 			index, err := strconv.Atoi(v)
 			if err != nil {
-				return nil, err
+				log.Fatalln(err)
+				return nil
 			}
 			result = result.([]interface{})[index]
 			continue
@@ -61,6 +62,6 @@ func (j *JsonStruct) Get(str string) (interface{}, error){
 			continue
 		}
 	}
-	return result, nil
+	return result
 }
 

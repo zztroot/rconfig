@@ -1,7 +1,6 @@
 package rconfig
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -32,7 +31,7 @@ func OpenConfig(path string) (*ConfigStruct, error) {
 	return &j, nil
 }
 
-func (c *ConfigStruct) Get(str string) (interface{}, error) {
+func (c *ConfigStruct) Get(str string) interface{}{
 	se := strings.Split(str, ".")
 	var s1 string
 	var s2 string
@@ -44,12 +43,14 @@ func (c *ConfigStruct) Get(str string) (interface{}, error) {
 		}
 	}
 	if s1 == "" {
-		return nil, errors.New(fmt.Sprintf(`This field does not exist: %s`, se[0]))
+		log.Fatalln(fmt.Sprintf(`This field does not exist: %s`, se[0]))
+		return nil
 	}
 	re := regexp.MustCompile(`(.*?)]`)
 	res := re.FindStringSubmatch(s1)
 	if res[1] != se[0] {
-		return nil, errors.New(fmt.Sprintf(`This field does not exist: %s`, res[1]))
+		log.Fatalln(fmt.Sprintf(`This field does not exist: %s`, res[1]))
+		return nil
 	}
 	line := strings.Split(s1, "\n")
 	for _, v := range line {
@@ -59,7 +60,8 @@ func (c *ConfigStruct) Get(str string) (interface{}, error) {
 		}
 	}
 	if s2 == "" {
-		return nil, errors.New(fmt.Sprintf(`This field does not exist: %s`, se[1]))
+		log.Fatalln(fmt.Sprintf(`This field does not exist: %s`, se[1]))
+		return nil
 	}
 	var newS2 string
 	if strings.Contains(s2, " ") {
@@ -69,18 +71,20 @@ func (c *ConfigStruct) Get(str string) (interface{}, error) {
 		re = regexp.MustCompile(`(.*?)=`)
 		res = re.FindStringSubmatch(newS2)
 		if res[1] != se[1] {
-			return nil, errors.New(fmt.Sprintf(`This field does not exist: %s`, res[1]))
+			log.Fatalln(fmt.Sprintf(`This field does not exist: %s`, res[1]))
+			return nil
 		}
 		field := strings.Split(newS2, "=")
 		results := strings.TrimRight(field[1], "\r")
-		return results, nil
+		return results
 	}
 	re = regexp.MustCompile(`(.*?)=`)
 	res = re.FindStringSubmatch(s2)
 	if res[1] != se[1] {
-		return nil, errors.New(fmt.Sprintf(`This field does not exist: %s`, res[1]))
+		log.Fatalln(fmt.Sprintf(`This field does not exist: %s`, res[1]))
+		return nil
 	}
 	field := strings.Split(s2, "=")
 	results := strings.TrimRight(field[1], "\r")
-	return results, nil
+	return results
 }
