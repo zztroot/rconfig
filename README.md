@@ -25,11 +25,11 @@ db_port = 6379
   
 code:  
 ```golang
-func main() {
-	file, _ := rconfig.OpenConfig("config.ini")
-	data := file.Get("server.port")
-	run := file.Get("server.run")
-	fmt.Println(data, run)
+func main() {  
+	file, _ := rconfig.OpenConfig("config.ini")  
+	data := file.Get("server.port")  
+	run := file.Get("server.run")  
+	fmt.Println(data, run)  
 }
 ```  
   
@@ -80,11 +80,11 @@ json:
   
 code:  
 ```golang
-func main() {
-	files, _ := rconfig.OpenJson("test.json")
-	name := files.Get("test.1.params.0.name")
-	desc := files.Get("test.1.params.0.desc")
-	fmt.Println(name, desc)
+func main() {  
+	files, _ := rconfig.OpenJson("test.json")  
+	name := files.Get("test.1.params.0.name")  
+	desc := files.Get("test.1.params.0.desc")  
+	fmt.Println(name, desc)  
 }
 ```  
   
