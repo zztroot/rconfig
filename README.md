@@ -103,6 +103,17 @@ results:
 key 333
 ```  
   
+**你还可以**
+code:  
+```golang
+func main() {  
+	files, _ := rconfig.OpenJson("test.json")  
+	name := files.GetString("test.1.params.0.name")  //key
+	desc := files.GetInt("test.1.params.0.desc")  //333
+	fmt.Println(name, desc)  
+}
+```
+
 
 
 
