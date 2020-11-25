@@ -1,6 +1,16 @@
 # rconfig  
 **用于读取配置文件，现可以读取json、ini、conf等后缀文件。**  
+  
+## Installation  
+Just ```pull zztroot/rconfig``` from github using ```go get```:
+```
+#download the code
+go get github.com/zztroot/rconfig
 
+#import the code 
+import "github.com/zztroot/rconfig"
+```
+  
 ## 例子  
 **1.读取ini文件**  
   
