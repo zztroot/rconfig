@@ -37,6 +37,11 @@ func OpenJson(path string) (*JsonStruct, error) {
 }
 
 func (j *JsonStruct) Get(str string) (interface{}, error){
+	defer func() {
+		if err := recover(); err != nil {
+			log.Fatalln("Field error:field does not exist")
+		}
+	}()
 	m := j.Data
 	g := strings.Split(str, ".")
 	var result interface{}
