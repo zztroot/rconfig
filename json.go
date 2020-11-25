@@ -2,6 +2,7 @@ package rconfig
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strconv"
@@ -65,3 +66,61 @@ func (j *JsonStruct) Get(str string) interface{}{
 	return result
 }
 
+func (j *JsonStruct) GetString(str string) string{
+	defer func() {
+		if err := recover(); err != nil {
+			log.Fatalln("Field error:field does not exist")
+		}
+	}()
+	m := j.Data
+	g := strings.Split(str, ".")
+	var result interface{}
+	for _, v := range g {
+		if result == nil {
+			result = m[v].(interface{})
+			continue
+		}else if _, err := strconv.Atoi(v); err == nil{
+			index, err := strconv.Atoi(v)
+			if err != nil {
+				log.Fatalln(err)
+				return ""
+			}
+			result = result.([]interface{})[index]
+			continue
+		}else {
+			result = result.(map[string]interface{})[v]
+			continue
+		}
+	}
+	return result.(string)
+}
+
+func (j *JsonStruct) GetInt(str string) int{
+	defer func() {
+		if err := recover(); err != nil {
+			log.Fatalln(fmt.Sprintf(`Field error or %v erro`, err))
+		}
+	}()
+	m := j.Data
+	g := strings.Split(str, ".")
+	var result interface{}
+	for _, v := range g {
+		if result == nil {
+			result = m[v].(interface{})
+			continue
+		}else if _, err := strconv.Atoi(v); err == nil{
+			index, err := strconv.Atoi(v)
+			if err != nil {
+				log.Fatalln(err)
+				return 0
+			}
+			result = result.([]interface{})[index]
+			continue
+		}else {
+			result = result.(map[string]interface{})[v]
+			continue
+		}
+	}
+	ms, _ := strconv.Atoi(result.(string))
+	return ms
+}
