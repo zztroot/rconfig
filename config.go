@@ -9,21 +9,21 @@ import (
 	"strings"
 )
 
-type ConfigStruct struct {
-	Data string
+type configStruct struct {
+	data string
 }
 
-func (c *ConfigStruct) loading(path string) error {
+func (c *configStruct) loading(path string) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
 	}
-	c.Data = string(data)
+	c.data = string(data)
 	return nil
 }
 
-func OpenConfig(path string) (*ConfigStruct, error) {
-	j := ConfigStruct{}
+func OpenConfig(path string) (*configStruct, error) {
+	j := configStruct{}
 	err := j.loading(path)
 	if err != nil {
 		log.Fatalln(err)
@@ -32,11 +32,11 @@ func OpenConfig(path string) (*ConfigStruct, error) {
 	return &j, nil
 }
 
-func (c *ConfigStruct) Get(str string) interface{} {
+func (c *configStruct) Get(str string) interface{} {
 	se := strings.Split(str, ".")
 	var s1 string
 	var s2 string
-	data := strings.Split(c.Data, "[")
+	data := strings.Split(c.data, "[")
 	for _, v := range data {
 		if strings.Contains(v, se[0]) {
 			s1 = v
@@ -94,11 +94,11 @@ func (c *ConfigStruct) Get(str string) interface{} {
 	return results
 }
 
-func (c *ConfigStruct) GetString(str string) string {
+func (c *configStruct) GetString(str string) string {
 	se := strings.Split(str, ".")
 	var s1 string
 	var s2 string
-	data := strings.Split(c.Data, "[")
+	data := strings.Split(c.data, "[")
 	for _, v := range data {
 		if strings.Contains(v, se[0]) {
 			s1 = v
@@ -155,11 +155,11 @@ func (c *ConfigStruct) GetString(str string) string {
 	return results
 }
 
-func (c *ConfigStruct) GetInt(str string) int {
+func (c *configStruct) GetInt(str string) int {
 	se := strings.Split(str, ".")
 	var s1 string
 	var s2 string
-	data := strings.Split(c.Data, "[")
+	data := strings.Split(c.data, "[")
 	for _, v := range data {
 		if strings.Contains(v, se[0]) {
 			s1 = v

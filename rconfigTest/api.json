@@ -1,0 +1,34 @@
+{
+  "test": [
+    {
+      "name": "ArticleQuery",
+      "desc": "left",
+      "params": [
+        {
+          "name": "key",
+          "desc": "xx"
+        },
+        {
+          "name": "id",
+          "desc": "123",
+          "note": "xx"
+        }
+      ]
+    },
+    {
+      "name": "TypeQuery",
+      "desc": "xx",
+      "params": [
+        {
+          "name": "key",
+          "desc": "333"
+        },
+        {
+          "name": "id",
+          "desc": "222",
+          "note": "rrr"
+        }
+      ]
+    }
+  ]
+}

@@ -9,26 +9,28 @@ import (
 	"strings"
 )
 
-type JsonStruct struct {
-	Data map[string]interface{}
+type jsonStruct struct {
+	data map[string]interface{}
+	path string
 }
 
-func (j *JsonStruct)loading(path string) error {
+func (j *jsonStruct) loading(path string) (*map[string]interface{}, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	m := make(map[string]interface{})
 	if err := json.Unmarshal(data, &m); err != nil {
-		return err
+		return nil, err
 	}
-	j.Data = m
-	return nil
+	j.data = m
+	j.path = path
+	return &m, nil
 }
 
-func OpenJson(path string) (*JsonStruct, error) {
-	j := JsonStruct{}
-	err := j.loading(path)
+func OpenJson(path string) (*jsonStruct, error) {
+	j := jsonStruct{}
+	_, err := j.loading(path)
 	if err != nil {
 		log.Fatalln(err)
 		return nil, err
@@ -37,20 +39,20 @@ func OpenJson(path string) (*JsonStruct, error) {
 
 }
 
-func (j *JsonStruct) Get(str string) interface{}{
+func (j *jsonStruct) Get(str string) interface{} {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Fatalln("Field error:field does not exist")
 		}
 	}()
-	m := j.Data
+	m := j.data
 	g := strings.Split(str, ".")
 	var result interface{}
 	for _, v := range g {
 		if result == nil {
 			result = m[v].(interface{})
 			continue
-		}else if _, err := strconv.Atoi(v); err == nil{
+		} else if _, err := strconv.Atoi(v); err == nil {
 			index, err := strconv.Atoi(v)
 			if err != nil {
 				log.Fatalln(err)
@@ -58,7 +60,7 @@ func (j *JsonStruct) Get(str string) interface{}{
 			}
 			result = result.([]interface{})[index]
 			continue
-		}else {
+		} else {
 			result = result.(map[string]interface{})[v]
 			continue
 		}
@@ -66,20 +68,20 @@ func (j *JsonStruct) Get(str string) interface{}{
 	return result
 }
 
-func (j *JsonStruct) GetString(str string) string{
+func (j *jsonStruct) GetString(str string) string {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Fatalln("Field error:field does not exist")
 		}
 	}()
-	m := j.Data
+	m := j.data
 	g := strings.Split(str, ".")
 	var result interface{}
 	for _, v := range g {
 		if result == nil {
 			result = m[v].(interface{})
 			continue
-		}else if _, err := strconv.Atoi(v); err == nil{
+		} else if _, err := strconv.Atoi(v); err == nil {
 			index, err := strconv.Atoi(v)
 			if err != nil {
 				log.Fatalln(err)
@@ -87,7 +89,7 @@ func (j *JsonStruct) GetString(str string) string{
 			}
 			result = result.([]interface{})[index]
 			continue
-		}else {
+		} else {
 			result = result.(map[string]interface{})[v]
 			continue
 		}
@@ -95,20 +97,20 @@ func (j *JsonStruct) GetString(str string) string{
 	return result.(string)
 }
 
-func (j *JsonStruct) GetInt(str string) int{
+func (j *jsonStruct) GetInt(str string) int {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Fatalln(fmt.Sprintf(`Field error or %v erro`, err))
 		}
 	}()
-	m := j.Data
+	m := j.data
 	g := strings.Split(str, ".")
 	var result interface{}
 	for _, v := range g {
 		if result == nil {
 			result = m[v].(interface{})
 			continue
-		}else if _, err := strconv.Atoi(v); err == nil{
+		} else if _, err := strconv.Atoi(v); err == nil {
 			index, err := strconv.Atoi(v)
 			if err != nil {
 				log.Fatalln(err)
@@ -116,11 +118,19 @@ func (j *JsonStruct) GetInt(str string) int{
 			}
 			result = result.([]interface{})[index]
 			continue
-		}else {
+		} else {
 			result = result.(map[string]interface{})[v]
 			continue
 		}
 	}
 	ms, _ := strconv.Atoi(result.(string))
 	return ms
+}
+
+func (j *jsonStruct) GetMap() map[string]interface{} {
+	 m, err := j.loading(j.path)
+	 if err != nil {
+	 	log.Fatalln(err)
+	 }
+	 return *m
 }
