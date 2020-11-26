@@ -9,12 +9,12 @@ import (
 	"strings"
 )
 
-type jsonStruct struct {
-	data map[string]interface{}
-	path string
+type JsonStruct struct {
+	Data map[string]interface{}
+	Path string
 }
 
-func (j *jsonStruct) loading(path string) (*map[string]interface{}, error) {
+func (j *JsonStruct) loading(path string) (*map[string]interface{}, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -23,13 +23,13 @@ func (j *jsonStruct) loading(path string) (*map[string]interface{}, error) {
 	if err := json.Unmarshal(data, &m); err != nil {
 		return nil, err
 	}
-	j.data = m
-	j.path = path
+	j.Data = m
+	j.Path = path
 	return &m, nil
 }
 
-func OpenJson(path string) (*jsonStruct, error) {
-	j := jsonStruct{}
+func OpenJson(path string) (*JsonStruct, error) {
+	j := JsonStruct{}
 	_, err := j.loading(path)
 	if err != nil {
 		log.Fatalln(err)
@@ -39,13 +39,13 @@ func OpenJson(path string) (*jsonStruct, error) {
 
 }
 
-func (j *jsonStruct) Get(str string) interface{} {
+func (j *JsonStruct) Get(str string) interface{} {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Fatalln("Field error:field does not exist")
 		}
 	}()
-	m := j.data
+	m := j.Data
 	g := strings.Split(str, ".")
 	var result interface{}
 	for _, v := range g {
@@ -68,13 +68,13 @@ func (j *jsonStruct) Get(str string) interface{} {
 	return result
 }
 
-func (j *jsonStruct) GetString(str string) string {
+func (j *JsonStruct) GetString(str string) string {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Fatalln("Field error:field does not exist")
 		}
 	}()
-	m := j.data
+	m := j.Data
 	g := strings.Split(str, ".")
 	var result interface{}
 	for _, v := range g {
@@ -97,13 +97,13 @@ func (j *jsonStruct) GetString(str string) string {
 	return result.(string)
 }
 
-func (j *jsonStruct) GetInt(str string) int {
+func (j *JsonStruct) GetInt(str string) int {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Fatalln(fmt.Sprintf(`Field error or %v erro`, err))
 		}
 	}()
-	m := j.data
+	m := j.Data
 	g := strings.Split(str, ".")
 	var result interface{}
 	for _, v := range g {
@@ -127,8 +127,8 @@ func (j *jsonStruct) GetInt(str string) int {
 	return ms
 }
 
-func (j *jsonStruct) GetMap() map[string]interface{} {
-	 m, err := j.loading(j.path)
+func (j *JsonStruct) GetMap() map[string]interface{} {
+	 m, err := j.loading(j.Path)
 	 if err != nil {
 	 	log.Fatalln(err)
 	 }
