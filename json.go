@@ -11,10 +11,10 @@ import (
 
 type JsonStruct struct {
 	Data map[string]interface{}
-	Path string
+	Str string
 }
 
-func (j *JsonStruct) loading(path string) (*map[string]interface{}, error) {
+func (j *JsonStruct) loadingPath(path string) (*map[string]interface{}, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -24,19 +24,36 @@ func (j *JsonStruct) loading(path string) (*map[string]interface{}, error) {
 		return nil, err
 	}
 	j.Data = m
-	j.Path = path
+	j.Str = path
 	return &m, nil
 }
 
-func OpenJson(path string) (*JsonStruct, error) {
-	j := JsonStruct{}
-	_, err := j.loading(path)
-	if err != nil {
-		log.Fatalln(err)
+func (j *JsonStruct) loadingRead(str string)(*map[string]interface{}, error){
+	m := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(str), &m); err != nil {
 		return nil, err
 	}
-	return &j, nil
+	j.Data = m
+	j.Str = str
+	return &m, nil
+}
 
+func OpenJson(str string) (*JsonStruct, error) {
+	j := JsonStruct{}
+	if strings.Contains(str, "{") && strings.Contains(str, ":") {
+		_, err := j.loadingRead(str)
+		if err != nil {
+			log.Fatalln(err)
+			return nil, err
+		}
+	}else {
+		_, err := j.loadingPath(str)
+		if err != nil {
+			log.Fatalln(err)
+			return nil, err
+		}
+	}
+	return &j, nil
 }
 
 func (j *JsonStruct) Get(str string) interface{} {
@@ -128,7 +145,7 @@ func (j *JsonStruct) GetInt(str string) int {
 }
 
 func (j *JsonStruct) GetMap() map[string]interface{} {
-	 m, err := j.loading(j.Path)
+	 m, err := j.loadingPath(j.Str)
 	 if err != nil {
 	 	log.Fatalln(err)
 	 }
