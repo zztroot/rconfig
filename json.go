@@ -38,16 +38,16 @@ func (j *JsonStruct) loadingRead(str string)(*map[string]interface{}, error){
 	return &m, nil
 }
 
-func OpenJson(str string) (*JsonStruct, error) {
+func OpenJson(path string) (*JsonStruct, error) {
 	j := JsonStruct{}
-	if strings.Contains(str, "{") && strings.Contains(str, ":") {
-		_, err := j.loadingRead(str)
+	if strings.Contains(path, "{") && strings.Contains(path, ":") {
+		_, err := j.loadingRead(path)
 		if err != nil {
 			log.Fatalln(err)
 			return nil, err
 		}
 	}else {
-		_, err := j.loadingPath(str)
+		_, err := j.loadingPath(path)
 		if err != nil {
 			log.Fatalln(err)
 			return nil, err
